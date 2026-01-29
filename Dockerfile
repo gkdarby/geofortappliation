@@ -1,0 +1,21 @@
+# ---------- Stage 1: Build the WAR ----------
+FROM maven:3.9.6-eclipse-temurin-17 AS build
+WORKDIR /app
+
+COPY pom.xml .
+COPY src ./src
+RUN mvn --batch-mode clean package
+
+# ---------- Stage 2: Run on Tomcat ----------
+# Vaadin 8 + javax.servlet-api => Tomcat 9
+FROM tomcat:9.0-jdk17
+
+RUN rm -rf /usr/local/tomcat/webapps/*
+
+# Deploy GeoFort app
+COPY --from=build /app/target/geofort-webapp.war \
+  /usr/local/tomcat/webapps/geofort-webapp.war
+
+EXPOSE 8080
+CMD ["catalina.sh", "run"]
+
