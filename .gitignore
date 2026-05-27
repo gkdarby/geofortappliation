@@ -1,2 +1,7 @@
+# Build outputs
 target/
 *.war
+*.zip
+
+# Local test/deployment artifacts
+geo-app/
