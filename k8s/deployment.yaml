@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: geofortapplication
+  namespace: geofort-app
+  labels:
+    app: geofortapplication
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: geofortapplication
+  template:
+    metadata:
+      labels:
+        app: geofortapplication
+    spec:
+      containers:
+        - name: geofortapplication
+          image: geofort/geofortapplication:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
