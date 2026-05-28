@@ -16,5 +16,12 @@ RUN rm -rf /usr/local/tomcat/webapps/*
 COPY --from=build /app/target/hello-world-web-app.war \
   /usr/local/tomcat/webapps/ROOT.war
 
+# Create a non-root user for container runtime security
+RUN groupadd --system geofort && \
+    useradd --system --gid geofort --home-dir /usr/local/tomcat geofort && \
+    chown --recursive geofort:geofort /usr/local/tomcat
+
+USER geofort
+
 EXPOSE 8080
 CMD ["catalina.sh", "run"]
